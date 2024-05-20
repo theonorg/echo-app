@@ -29,6 +29,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: terraform init
+      run: |
+        cd ./terraform
+        export
+        terraform init -backend-config="key=github-runner.tfstate"
+
     - name: terraform validate
       run: |
         cd ./deploy/terraform/github-runner
