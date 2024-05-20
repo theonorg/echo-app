@@ -57,4 +57,4 @@ jobs:
     - name: run ansible playbook
       run: |
         cd ./ansible
-        ansible-playbook -i inventory/hosts playbook.yml
+        ansible-playbook -i inventory/hosts.yml playbook.yml
