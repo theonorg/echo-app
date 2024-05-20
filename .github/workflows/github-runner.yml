@@ -28,6 +28,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: terraform validate
+      run: |
+        cd ./deploy/terraform/github-runner
+        terraform validate
     
     - uses: actions/upload-artifact@v3
       if: github.event_name != 'pull_request'
