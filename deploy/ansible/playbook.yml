@@ -24,18 +24,18 @@
     - name: Download GitHub Runner
       ansible.builtin.get_url:
         url: "https://github.com/actions/runner/releases/download/v2.316.1/actions-runner-osx-x64-2.316.1.tar.gz"
-        dest: /home/azureadmin/actions-runner-linux-x64.tar.gz
+        dest: /home/azureadmin/runner/actions-runner-linux-x64.tar.gz
         mode: 0644
 
     - name: Extract GitHub Runner
       ansible.builtin.unarchive:
-        src: /home/azureadmin/actions-runner-linux-x64.tar.gz
-        dest: /home/azureadmin
+        src: /home/azureadmin/runner/actions-runner-linux-x64.tar.gz
+        dest: /home/azureadmin/runner
         remote_src: yes
 
     - name: Configure GitHub Runner
       command: |
-        cd /home/azureadmin
+        cd /home/azureadmin/runner
         ls -la
         "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
 
@@ -46,5 +46,5 @@
         enabled: yes
         daemon_reload: yes
         user: azureadmin
-        exec_start: /home/github-runner/run.sh
+        exec_start: /home/azureadmin/runner/run.sh
       become: true
