@@ -42,12 +42,12 @@
         remote_src: yes
 
     - name: Configure GitHub Runner
-      ansible.builtin.command: |
+      ansible.builtin.shell: |
         cd /home/azureadmin/runner
         ls -la
 
     - name: Configure GitHub Runner
-      ansible.builtin.command: |
+      ansible.builtin.shell: |
         cd /home/azureadmin/runner
         "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
 
