@@ -24,7 +24,7 @@
 
     - name: Extract GitHub Runner
       ansible.builtin.unarchive:
-        src: /home/github-runner/actions-runner-linux-x64.tar.gz
+        src: /home/azureadmin/actions-runner-linux-x64.tar.gz
         dest: /home/azureadmin
         remote_src: yes
 
