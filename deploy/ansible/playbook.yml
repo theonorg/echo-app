@@ -22,7 +22,7 @@
       become: true
 
     - name: Create runner directory
-      ansible.buitin.file:
+      ansible.builtin.file:
         path: /home/azureadmin/runner
         state: directory
         mode: 0755
