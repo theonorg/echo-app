@@ -21,6 +21,14 @@
         state: present
       become: true
 
+    - name: Create runner directory
+      ansible.buitin.file:
+        path: /home/azureadmin/runner
+        state: directory
+        mode: 0755
+        owner: azureadmin
+        group: azureadmin
+
     - name: Download GitHub Runner
       ansible.builtin.get_url:
         url: "https://github.com/actions/runner/releases/download/v2.316.1/actions-runner-osx-x64-2.316.1.tar.gz"
@@ -34,13 +42,13 @@
         remote_src: yes
 
     - name: Configure GitHub Runner
-      command: |
+      ansible.builtin.command: |
         cd /home/azureadmin/runner
         ls -la
         "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
 
     - name: Install GitHub Runner as a service
-      systemd:
+      ansible.builtin.systemd:
         name: actions.runner.your_vm_host
         state: started
         enabled: yes
