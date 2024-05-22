@@ -10,6 +10,11 @@
     - name: Ping
       ping:
 
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      become: true
+
     - name: Install required packages
       ansible.builtin.apt:
         name: ['git', 'curl', 'jq', 'dotnet-sdk-8.0']
