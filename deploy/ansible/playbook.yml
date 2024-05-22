@@ -45,6 +45,10 @@
       ansible.builtin.command: |
         cd /home/azureadmin/runner
         ls -la
+
+    - name: Configure GitHub Runner
+      ansible.builtin.command: |
+        cd /home/azureadmin/runner
         "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
 
     - name: Install GitHub Runner as a service
