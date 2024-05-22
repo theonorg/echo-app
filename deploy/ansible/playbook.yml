@@ -35,7 +35,9 @@
 
     - name: Configure GitHub Runner
       command: |
-        "/home/azureadmin/config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
+        cd /home/azureadmin
+        ls -la
+        "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
 
     - name: Install GitHub Runner as a service
       systemd:
