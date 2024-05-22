@@ -24,7 +24,7 @@
 
     - name: Download GitHub Runner
       ansible.builtin.get_url:
-        url: https://github.com/actions/runner/releases/latest/download/actions-runner-linux-x64-2.283.2.tar.gz
+        url: https://github.com/actions/runner/releases/download/latest/actions-runner-linux-x64-latest.tar.gz
         dest: /home/github-runner/actions-runner-linux-x64.tar.gz
         mode: 0644
       become: true
