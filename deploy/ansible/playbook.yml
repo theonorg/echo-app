@@ -3,7 +3,7 @@
   hosts: runner
   become: true
   vars:
-    github-runner-version: "2.316.1"
+    github_runner_version: "2.316.1"
 
   tasks:
 
@@ -26,7 +26,7 @@
 
     - name: Download GitHub Runner
       ansible.builtin.get_url:
-        url: "https://github.com/actions/runner/releases/download/${{github-runner-version}}/actions-runner-osx-x64-${{github-runner-version}}.tar.gz"
+        url: "https://github.com/actions/runner/releases/download/${{github_runner_version}}/actions-runner-osx-x64-${{github_runner_version}}.tar.gz"
         dest: /home/github-runner/actions-runner-linux-x64.tar.gz
         mode: 0644
       become: true
