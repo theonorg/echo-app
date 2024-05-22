@@ -38,8 +38,8 @@
 
     - name: Configure GitHub Runner
       command: |
-        /home/github-runner/config.sh --url https://github.com/theonorg/echo-app --token your_runner_token
-      become: true
+        /home/github-runner/config.sh --url https://github.com/theonorg/echo-app --token ${{ secrets.GITHUB_TOKEN }}
+      become_user: github-runner
 
     - name: Install GitHub Runner as a service
       systemd:
