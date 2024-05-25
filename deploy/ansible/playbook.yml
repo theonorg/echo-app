@@ -1,9 +1,10 @@
 ---
 - name: Prepare VM for GitHub Runner
   hosts: runner
-  become: true
+  gather_facts: true
   vars:
     github_token: ""
+    username: "azureadmin"
   
   tasks:
 
@@ -23,40 +24,60 @@
 
     - name: Create runner directory
       ansible.builtin.file:
-        path: /home/azureadmin/runner
+        path: /home/{{ username }}/runner
         state: directory
         mode: 0755
-        owner: azureadmin
-        group: azureadmin
+        owner: "{{ username }}"
+        group: "{{ username }}"
 
     - name: Download GitHub Runner
       ansible.builtin.get_url:
-        url: "https://github.com/actions/runner/releases/download/v2.316.1/actions-runner-osx-x64-2.316.1.tar.gz"
-        dest: /home/azureadmin/runner/actions-runner-linux-x64.tar.gz
+        url: "https://github.com/actions/runner/releases/download/v2.316.1/actions-runner-linux-x64-2.316.1.tar.gz"
+        dest: /home/{{ username }}/runner/actions-runner-linux-x64.tar.gz
         mode: 0644
+      register: download_runner
 
     - name: Extract GitHub Runner
       ansible.builtin.unarchive:
-        src: /home/azureadmin/runner/actions-runner-linux-x64.tar.gz
-        dest: /home/azureadmin/runner
-        remote_src: yes
+        src: /home/{{ username }}/runner/actions-runner-linux-x64.tar.gz
+        dest: /home/{{ username }}/runner
+        remote_src: true
+      when: download_runner.changed
+
+    - name: Check if runner service name file exist
+      ansible.builtin.stat:
+        path: "/home/{{ username }}/runner/.runner"
+      register: runner_reg_file_path
+
+    - name: Check if runner service name file exist
+      ansible.builtin.stat:
+        path: "/home/{{ username }}/runner/.service"
+      register: runner_service_file_path
 
     - name: Configure GitHub Runner
-      ansible.builtin.shell: |
-        cd /home/azureadmin/runner
-        ls -la
+      ansible.builtin.command: |
+        ./config.sh \
+        --url https://github.com/theonorg/echo-app \
+        --token {{ github_token }} \
+        --name "myRunner" \
+        --labels "myRunner" \
+        --runnergroup "Default" \
+        --unattended \
+        --replace
+      args:
+        chdir: "/home/{{ username }}/runner"
+      when: not runner_reg_file_path.stat.exists
 
-    - name: Configure GitHub Runner
-      ansible.builtin.shell: |
-        cd /home/azureadmin/runner
-        "./config.sh --url https://github.com/theonorg/echo-app --token ${{ github_token }}"
-
-    - name: Install GitHub Runner as a service
-      ansible.builtin.systemd:
-        name: actions.runner.your_vm_host
-        state: started
-        enabled: yes
-        daemon_reload: yes
-        user: azureadmin
-        exec_start: /home/azureadmin/runner/run.sh
+    - name: Install GitHub Runner Service
+      ansible.builtin.command: "./svc.sh install"
+      args:
+        chdir: "/home/{{ username }}/runner"
       become: true
+      when: not runner_service_file_path.stat.exists
+
+    - name: Start GitHub Runner Service
+      ansible.builtin.command: "./svc.sh start"
+      args:
+        chdir: "/home/{{ username }}/runner"
+      become: true
+      when: not runner_service_file_path.stat.exists
