@@ -62,8 +62,7 @@
         --name "myRunner" \
         --labels "myRunner" \
         --runnergroup "Default" \
-        --unattended \
-        --replace
+        --unattended
       args:
         chdir: "/home/{{ username }}/runner"
       when: not runner_reg_file_path.stat.exists
