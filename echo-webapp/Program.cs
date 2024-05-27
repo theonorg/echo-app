@@ -1,4 +1,6 @@
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Logging.Console;
+using Microsoft.FeatureManagement;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,26 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowAnyHeader());
     });
+
+// Add Azure App Configuration middleware to the container of services.
+builder.Services.AddAzureAppConfiguration();
+// Add feature management to the container of services.
+builder.Services.AddFeatureManagement();
+
+
+// Load configuration from Azure App Configuration
+builder.Configuration.AddAzureAppConfiguration(options =>
+{
+    options.Connect(builder.Configuration["AppConfigConnString"])
+           // Load all keys that start with `TestApp:` and have no label
+           .Select("*", LabelFilter.Null)
+           // Configure to reload configuration if the registered sentinel key is modified
+           .ConfigureRefresh(refreshOptions =>
+                refreshOptions.Register("TestApp:Settings:Sentinel", refreshAll: true));
+
+    // Load all feature flags with no label
+    options.UseFeatureFlags();
+});
 
 var app = builder.Build();
 
