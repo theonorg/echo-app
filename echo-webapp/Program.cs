@@ -32,13 +32,7 @@ builder.Services.AddFeatureManagement();
 // Load configuration from Azure App Configuration
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
-    options.Connect(builder.Configuration["AppConfigConnString"])
-           // Load all keys that start with `TestApp:` and have no label
-           .Select("*", LabelFilter.Null)
-           // Configure to reload configuration if the registered sentinel key is modified
-           .ConfigureRefresh(refreshOptions =>
-                refreshOptions.Register("TestApp:Settings:Sentinel", refreshAll: true));
-
+    options.Connect(builder.Configuration["AppConfigConnString"]);
     // Load all feature flags with no label
     options.UseFeatureFlags();
 });
