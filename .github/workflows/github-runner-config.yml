@@ -59,4 +59,4 @@ jobs:
     - name: run ansible playbook
       run: |
         cd ./ansible
-        ansible-playbook -i inventory/hosts.yml playbook.yml --extra-vars "github_token=${{ secrets.GITHUB_TOKEN }}"
+        ansible-playbook -i inventory/hosts.yml playbook.yml --extra-vars "github_token=${{ secrets.MY_PAT }}"
