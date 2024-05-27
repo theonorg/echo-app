@@ -56,13 +56,13 @@ resource "azurerm_linux_web_app" "webapp" {
 data "azurerm_client_config" "current" {}
 
 resource "azurerm_role_assignment" "appconf_dataowner" {
-  scope                = azurerm_app_configuration.appconf.id
+  scope                = azurerm_app_configuration.appconfig.id
   role_definition_name = "App Configuration Data Owner"
   principal_id         = data.azurerm_client_config.current.object_id
 }
 
 resource "azurerm_app_configuration_feature" "test" {
-  configuration_store_id = azurerm_app_configuration.appconf.id
+  configuration_store_id = azurerm_app_configuration.appconfig.id
   description            = "GetLogs button"
   name                   = "GetLogs"
   enabled                = true
