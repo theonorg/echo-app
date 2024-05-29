@@ -28,13 +28,15 @@ builder.Services.AddAzureAppConfiguration();
 // Add feature management to the container of services.
 builder.Services.AddFeatureManagement();
 
-
 // Load configuration from Azure App Configuration
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
     options.Connect(builder.Configuration["AppConfigConnString"]);
     // Load all feature flags with no label
-    options.UseFeatureFlags();
+    options.UseFeatureFlags(options => {
+                            options.CacheExpirationInterval = TimeSpan.FromSeconds(5);
+                            options.Select(KeyFilter.Any, "TestLabel");
+                        });
 });
 
 var app = builder.Build();
