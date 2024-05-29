@@ -33,15 +33,13 @@ builder.Configuration.AddAzureAppConfiguration(options =>
 {
     options.Connect(builder.Configuration["AppConfigConnString"]);
     // Load all feature flags with no label
-    options.UseFeatureFlags(options => {
-                            options.CacheExpirationInterval = TimeSpan.FromSeconds(5);
-                            options.Select(KeyFilter.Any, "TestLabel");
-                        });
+    options.UseFeatureFlags();
 });
 
 var app = builder.Build();
 
 app.UseCors("CorsPolicy");
+app.UseAzureAppConfiguration();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
